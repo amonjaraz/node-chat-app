@@ -16,14 +16,13 @@ app.use(express.static(publicPath)); //express middleware. you can now visit loc
 io.on('connection', (socket)=>{
     console.log("new User Connected.");
     
-    socket.emit('newMessage', { //event
-        from: "Pete",
-        text: "Hello client",
-        createdAt: 123
-    });
-    
     socket.on('createMessage', (message)=>{ //listener
         console.log('Create Msg', message);
+        io.emit('newMessage', { //broadcast send.
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
     
     
