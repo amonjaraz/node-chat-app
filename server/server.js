@@ -15,14 +15,32 @@ app.use(express.static(publicPath)); //express middleware. you can now visit loc
 
 io.on('connection', (socket)=>{
     console.log("new User Connected.");
+
+    socket.emit('newMessage',{
+        from: 'Admin',
+        text: ' welcome to chat app.',
+        createdAt: new Date().getTime()
+    });
+
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'from Admin New User Joined',
+        createdAt: new Date().getTime()
+    });
     
     socket.on('createMessage', (message)=>{ //listener
         console.log('Create Msg', message);
+
         io.emit('newMessage', { //broadcast send.
             from: message.from,
             text: message.text,
             createdAt: new Date().getTime()
         });
+        // socket.broadcast.emit('newMessage', { //broadcast except this user.
+        //         from: message.from,
+        //         text: message.text,
+        //         createdAt: new Date().getTime()
+        //     });
     });
     
     

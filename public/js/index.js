@@ -5,7 +5,15 @@ socket.on('connect', function(){ //event
     socket.on('newMessage', function(msg){ //event
         console.log('new Message', msg);
     });
-    
+
+    socket.on('newUserWelcome', function(msg){
+        console.log(msg.text);
+    });
+
+    socket.on('newUserJoined', function(msg){
+        console.log(msg.text);
+    });
+
     socket.on('disconnect', function(){ //event
         console.log('Disconnected from Server.');
     });    
