@@ -6,6 +6,8 @@ const http = require('http');
 const publicPath = path.join(__dirname, '../public');
 //console.log(publicPath);
 
+const {generateMessage} = require('./utils/message');
+
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
@@ -16,26 +18,15 @@ app.use(express.static(publicPath)); //express middleware. you can now visit loc
 io.on('connection', (socket)=>{
     console.log("new User Connected.");
 
-    socket.emit('newMessage',{
-        from: 'Admin',
-        text: ' welcome to chat app.',
-        createdAt: new Date().getTime()
-    });
+    socket.emit('newMessage', generateMessage('Admin', 'welcome to chat app.') ); 
 
-    socket.broadcast.emit('newMessage', {
-        from: 'Admin',
-        text: 'from Admin New User Joined',
-        createdAt: new Date().getTime()
-    });
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'from Admin New User Joined'));
     
     socket.on('createMessage', (message)=>{ //listener
         console.log('Create Msg', message);
 
-        io.emit('newMessage', { //broadcast send.
-            from: message.from,
-            text: message.text,
-            createdAt: new Date().getTime()
-        });
+        io.emit('newMessage',generateMessage(message.from, message.text))  //broadcast send.
+
         // socket.broadcast.emit('newMessage', { //broadcast except this user.
         //         from: message.from,
         //         text: message.text,
