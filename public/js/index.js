@@ -4,6 +4,10 @@ socket.on('connect', function(){ //event
 
     socket.on('newMessage', function(msg){ //event
         console.log('new Message', msg);
+        var li = jQuery('<li></li>');
+        li.text(`${msg.from}: ${msg.text}`);
+
+        jQuery('#messages').append(li);
     });
 
     socket.on('newUserWelcome', function(msg){
@@ -12,6 +16,16 @@ socket.on('connect', function(){ //event
 
     socket.on('newUserJoined', function(msg){
         console.log(msg.text);
+    });
+
+    jQuery('#message-form').on('submit', function(e) {
+        e.preventDefault();
+        socket.emit('createMessage', {
+            from: 'user',
+            text: jQuery('[name=message]').val()
+        }, function() {
+            console.log('Done');
+        })
     });
 
     socket.on('disconnect', function(){ //event

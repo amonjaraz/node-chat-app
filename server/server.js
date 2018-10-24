@@ -22,11 +22,11 @@ io.on('connection', (socket)=>{
 
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'from Admin New User Joined'));
     
-    socket.on('createMessage', (message)=>{ //listener
+    socket.on('createMessage', (message, callback)=>{ //listener
         console.log('Create Msg', message);
 
         io.emit('newMessage',generateMessage(message.from, message.text))  //broadcast send.
-
+        callback(' some data from server');
         // socket.broadcast.emit('newMessage', { //broadcast except this user.
         //         from: message.from,
         //         text: message.text,
